@@ -2,7 +2,7 @@ import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
 // Routes reachable without a session (plus /login itself).
-const PUBLIC = ['/login', '/api/instagram/callback', '/api/inngest']
+const PUBLIC = ['/api/instagram/webhook', '/login', '/api/instagram/callback', '/api/inngest']
 
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request })
