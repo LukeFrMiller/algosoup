@@ -3,7 +3,8 @@ import { Explorer } from '@/components/dashboard/explorer'
 import { Heatmap } from '@/components/dashboard/heatmap'
 import { ParamSelect } from '@/components/dashboard/param-select'
 import { SuggestionCards } from '@/components/dashboard/suggestion-cards'
-import { asDimension, asMetric, CHIP, compact, DIMENSIONS, METRICS, mult, pct, plain, shortDate, THUMB } from '@/components/dashboard/format'
+import { asDimension, asMetric, CHIP, compact, DIMENSIONS, METRICS, mult, pct, plain, shortDate } from '@/components/dashboard/format'
+import { Thumb } from '@/components/video/thumb'
 import { buttonVariants } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
@@ -17,7 +18,7 @@ import Link from 'next/link'
 const BEAT_ORDER = ['context', 'problem', 'counter_positioning', 'proof', 'steps', 'example', 'payoff', 'cta', 'aside']
 const DISMISS_DAYS = 30
 
-type TopVideo = { video_id: string; permalink: string; posted_at: string; hook_text: string | null; hook_device: string | null; value: number; log_ratio: number; saves: number }
+type TopVideo = { video_id: string; permalink: string; thumbnail_url: string | null; posted_at: string; hook_text: string | null; hook_device: string | null; value: number; log_ratio: number; saves: number }
 
 export default async function Page({ searchParams }: { searchParams: Promise<{ dim?: string; metric?: string }> }) {
   const sp = await searchParams
@@ -32,7 +33,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ d
     supabase.from('v_dimension_counts').select('*').eq('metric', metric),
     supabase.from('v_pair_counts').select('*').eq('metric', metric),
     supabase.from('v_video_scores').select(`log_ratio:${metric}_log_ratio,baseline:${metric}_baseline,saves_baseline,shares_baseline,posted_at`).order('posted_at', { ascending: false }),
-    supabase.from('v_top_videos').select(`video_id,permalink,posted_at,hook_text,hook_device,value:${metric},log_ratio:${metric}_log_ratio,saves`).not(`${metric}_log_ratio`, 'is', null).order(`${metric}_log_ratio`, { ascending: false }).limit(10),
+    supabase.from('v_top_videos').select(`video_id,permalink,thumbnail_url,posted_at,hook_text,hook_device,value:${metric},log_ratio:${metric}_log_ratio,saves`).not(`${metric}_log_ratio`, 'is', null).order(`${metric}_log_ratio`, { ascending: false }).limit(10),
     supabase.from('hypotheses').select('labels,status,created_at'),
     supabase.from('videos').select('*', { count: 'exact', head: true }),
   ])
@@ -163,9 +164,9 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ d
                 <TableCell className="text-right text-muted-foreground tabular-nums">{i + 1}</TableCell>
                 <TableCell>
                   <div className="flex items-center gap-2.5">
-                    <div className={THUMB} />
+                    <Link href={`/videos/${v.video_id}`}><Thumb src={v.thumbnail_url} /></Link>
                     <div className="min-w-0">
-                      <div className="max-w-[520px] truncate font-medium">“{v.hook_text ?? 'untitled'}”</div>
+                      <Link href={`/videos/${v.video_id}`} className="block max-w-[520px] truncate font-medium hover:underline">“{v.hook_text ?? 'untitled'}”</Link>
                       <div className="text-xs text-muted-foreground">
                         {shortDate(v.posted_at)} ·{' '}
                         <a href={v.permalink} target="_blank" rel="noreferrer" className="hover:text-foreground">open on Instagram</a>

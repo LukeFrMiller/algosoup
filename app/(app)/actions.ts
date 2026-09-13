@@ -47,13 +47,13 @@ export async function dismissSuggestion(s: Suggestion) {
   revalidatePath('/')
 }
 
-export type CellVideo = { video_id: string; permalink: string; hook_text: string | null; posted_at: string; value: number; log_ratio: number | null; hit: boolean | null }
+export type CellVideo = { video_id: string; permalink: string; thumbnail_url: string | null; hook_text: string | null; posted_at: string; value: number; log_ratio: number | null; hit: boolean | null }
 
 export async function cellVideos(hook: string, beat: string, metric: Metric): Promise<CellVideo[]> {
   const supabase = await createClient()
   const { data, error } = await supabase
     .from('v_top_videos')
-    .select(`video_id,permalink,hook_text,posted_at,value:${metric},log_ratio:${metric}_log_ratio,hit:${metric}_hit,script_labels!inner(beats)`)
+    .select(`video_id,permalink,thumbnail_url,hook_text,posted_at,value:${metric},log_ratio:${metric}_log_ratio,hit:${metric}_hit,script_labels!inner(beats)`)
     .eq('hook_device', hook)
     .contains('script_labels.beats', [beat])
     .not(`${metric}_log_ratio`, 'is', null)

@@ -8,7 +8,9 @@ import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetDescription, SheetTitle } from '@/components/ui/sheet'
 import type { Metric, PairStat, Suggestion } from '@/lib/stats/types'
 import { TARGET_N } from '@/lib/suggestions'
-import { CHIP, chipText, compact, mult, pct, shortDate, THUMB } from './format'
+import Link from 'next/link'
+import { CHIP, chipText, compact, mult, pct, shortDate } from './format'
+import { Thumb } from '@/components/video/thumb'
 
 const RAMP = ['#cde2fb', '#b7d3f6', '#9ec5f4', '#86b6ef', '#6da7ec', '#5598e7', '#3987e5', '#2a78d6', '#256abf', '#1c5cab', '#184f95', '#104281', '#0d366b']
 const rampAt = (m: number) => RAMP[Math.min(RAMP.length - 1, Math.max(0, Math.round(((m - 0.05) / 0.6) * (RAMP.length - 1))))]
@@ -152,9 +154,9 @@ function CellSheet({ pair, metric, minSample, screened, onClose }: { pair: PairS
               </div>
               {videos?.map((v) => (
                 <div key={v.video_id} className="flex items-center gap-3 border-b py-2.5 last:border-b-0">
-                  <div className={THUMB} />
+                  <Link href={`/videos/${v.video_id}`}><Thumb src={v.thumbnail_url} /></Link>
                   <div className="min-w-0 grow">
-                    <div className="truncate font-medium">“{v.hook_text}”</div>
+                    <Link href={`/videos/${v.video_id}`} className="block truncate font-medium hover:underline">“{v.hook_text}”</Link>
                     <div className="text-xs text-muted-foreground">{shortDate(v.posted_at)} · {compact(v.value)} {metric}</div>
                   </div>
                   <div className="flex flex-col items-end">

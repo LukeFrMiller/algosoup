@@ -23,6 +23,7 @@ export async function transcribeUrl(mediaUrl: string): Promise<Transcription> {
   form.append('file', new Blob([bytes], { type: res.headers.get('content-type') ?? 'video/mp4' }), 'reel.mp4')
   form.append('model', model)
   form.append('response_format', 'verbose_json')
+  form.append('language', 'en') // reels are English; auto-detect mislabels some as Russian
   const w = await fetch(`${env('WHISPER_BASE_URL')}/audio/transcriptions`, {
     method: 'POST',
     headers: { authorization: `Bearer ${env('WHISPER_API_KEY')}` },

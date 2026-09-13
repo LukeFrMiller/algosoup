@@ -788,6 +788,7 @@ export type Database = {
           shares_baseline: number | null
           shares_hit: boolean | null
           shares_log_ratio: number | null
+          thumbnail_url: string | null
           video_id: string | null
           views: number | null
           views_baseline: number | null
@@ -818,6 +819,7 @@ export type Database = {
           posted_at: string | null
           saves: number | null
           saves_log_ratio: number | null
+          search_text: string | null
           shares: number | null
           thumbnail_url: string | null
           transcript_status: string | null

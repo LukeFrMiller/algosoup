@@ -14,10 +14,12 @@ export default async function AppLayout({ children }: { children: React.ReactNod
     <>
       <Nav
         status={`${account.data ? `@${account.data.username}` : 'no account'} · last refreshed ${relative(run.data?.finished_at)}`}
-        action={<BackfillButton activeRunId={run.data?.status === 'running' && Date.parse(run.data.started_at) > Date.now() - 2 * 3600e3 ? run.data.id : null} />}
+        action={<BackfillButton activeRunId={run.data?.status === 'running' && isRecent(run.data.started_at) ? run.data.id : null} />}
       />
       <main className="mx-auto flex max-w-[1440px] flex-col gap-6 p-6">{children}</main>
       <Toaster />
     </>
   )
 }
+
+const isRecent = (iso: string) => Date.parse(iso) > Date.now() - 2 * 3600e3
