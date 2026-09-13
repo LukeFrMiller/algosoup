@@ -22,7 +22,7 @@ export default async function VideosPage({ searchParams }: { searchParams: Promi
   // ponytail: one query; the view joins metrics, latest label, transcript status and score.
   let query = supabase.from('v_video_list').select('*', { count: 'exact' })
   // ponytail: Postgres full-text search over caption + hook + topic + transcript. Embeddings if this ever feels dumb.
-  if (q) query = query.textSearch('search_text', q, { type: 'websearch', config: 'english' })
+  if (q) query = query.textSearch('search_tsv', q, { type: 'websearch', config: 'english' })
   const { data, count } = await query
     .order(SORTS[sort], { ascending: asc, nullsFirst: false })
     .order('posted_at', { ascending: false })

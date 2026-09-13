@@ -3,28 +3,29 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import { Table, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { evaluateHypothesis, humanise } from '@/lib/suggestions'
 import { createClient } from '@/lib/supabase/server'
-import { ClickRow, NewHypothesis } from '@/components/hypotheses/client'
+import { HypRows, NewHypothesis } from '@/components/hypotheses/client'
 import { Chip, Dot, cap, labelEntries, fmtDate, fmtShortDate, pct, ratio, type Metric, type Row, type View } from '@/components/video/format'
 import { closeHypothesis, extendTarget } from './actions'
 
 type Hyp = Row<'hypotheses'>
-type Top = View<'v_top_videos'>
+type Top = Pick<View<'v_top_videos'>, 'video_id' | 'posted_at' | 'hook_text' | 'views_hit' | 'saves_hit' | 'shares_hit' | 'engagement_hit' | 'views_log_ratio' | 'saves_log_ratio' | 'shares_log_ratio' | 'engagement_log_ratio'>
 
 export default async function HypothesesPage({ searchParams }: { searchParams: Promise<{ open?: string }> }) {
   const { open } = await searchParams
   const supabase = await createClient()
-  const [hyps, tags, base] = await Promise.all([
+  // ponytail: fetch every scored reel in parallel instead of a dependent `.in(ids)` round trip; ≤ a few thousand rows.
+  const [hyps, tags, base, topQ] = await Promise.all([
     supabase.from('hypotheses').select('*').order('created_at'),
     supabase.from('hypothesis_videos').select('hypothesis_id, video_id'),
     supabase.from('v_base_rate').select('*'),
+    supabase.from('v_top_videos').select('video_id,posted_at,hook_text,views_hit,saves_hit,shares_hit,engagement_hit,views_log_ratio,saves_log_ratio,shares_log_ratio,engagement_log_ratio'),
   ])
   const all = (hyps.data ?? []) as Hyp[]
   const tagged = (tags.data ?? []) as { hypothesis_id: string; video_id: string }[]
-  const ids = [...new Set(tagged.map((t) => t.video_id))]
-  const top = ids.length ? ((await supabase.from('v_top_videos').select('*').in('video_id', ids)).data as Top[] | null) ?? [] : []
+  const top = (topQ.data ?? []) as Top[]
   const topById = new Map(top.map((t) => [t.video_id, t]))
   const p0 = Object.fromEntries((base.data as View<'v_base_rate'>[] | null ?? []).map((b) => [b.metric, b.n ? (b.hits ?? 0) / b.n : 0.25])) as Record<string, number>
 
@@ -52,7 +53,6 @@ export default async function HypothesesPage({ searchParams }: { searchParams: P
   await Promise.all(rows.filter((r) => r.h.status === 'active' && r.status !== 'active').map((r) =>
     supabase.from('hypotheses').update({ status: r.status, closed_at: new Date().toISOString() }).eq('id', r.h.id)))
 
-  const detail = rows.find((r) => r.h.id === open)
 
   return (
     <>
@@ -73,9 +73,14 @@ export default async function HypothesesPage({ searchParams }: { searchParams: P
               <TableHead className="w-[220px]">Progress</TableHead><TableHead>Verdict</TableHead><TableHead />
             </TableRow>
           </TableHeader>
-          <TableBody>
-            {rows.map((r) => (
-              <ClickRow key={r.h.id} href={`/hypotheses?open=${r.h.id}`} className={r.status === 'active' ? '' : 'opacity-60'} data-state={open === r.h.id ? 'selected' : undefined}>
+          <HypRows
+            initialOpen={open ?? null}
+            empty="No hypotheses yet. Accept a suggestion on the dashboard or create one."
+            rows={rows.map((r) => ({
+              id: r.h.id,
+              muted: r.status !== 'active',
+              cells: (
+                <>
                 <TableCell className="text-muted-foreground">{r.name}</TableCell>
                 <TableCell>
                   <div className="flex flex-wrap items-center gap-1.5">
@@ -95,42 +100,42 @@ export default async function HypothesesPage({ searchParams }: { searchParams: P
                   <span className="text-xs text-muted-foreground">{r.n} of {r.h.target_n} mature{r.tooNew > 0 && ` · ${r.tooNew} more posted, too new`}</span>
                 </TableCell>
                 <TableCell><Badge variant="outline"><Dot color={r.color} className="mr-1" />{r.verdict}</Badge></TableCell>
-                <TableCell><Link href={`/hypotheses?open=${r.h.id}`} className="text-xs font-medium hover:underline">Open</Link></TableCell>
-              </ClickRow>
-            ))}
-            {!rows.length && <TableRow><TableCell colSpan={8} className="text-center text-muted-foreground">No hypotheses yet. Accept a suggestion on the dashboard or create one.</TableCell></TableRow>}
-          </TableBody>
-        </Table>
-      </div>
-
-      {detail && (
+                </>
+              ),
+              detail: (
         <Card className="max-w-[720px]">
           <CardHeader>
-            <CardTitle>{detail.name} · {detail.labels.map(([, v]) => v).join(' × ')}</CardTitle>
+            <CardTitle>{r.name} · {r.labels.map(([, v]) => v).join(' × ')}</CardTitle>
             <CardDescription>
-              {detail.verdict}. Prospective hit rate {detail.hits}/{detail.n} (posterior {pct(detail.ev.posterior.mean)}, interval {pct(detail.ev.posterior.lo)}–{pct(detail.ev.posterior.hi)}) against a {pct(detail.base)} base rate.
-              {detail.ev.status === 'supported' && ' The lower bound clears the base rate, so this counts as evidence.'}
-              {detail.ev.status === 'not_supported' && ' The upper bound sits below the prior, so the combination did not hold up.'}
-              {` It is still ${detail.n} video${detail.n === 1 ? '' : 's'}.`}
+              {r.verdict}. Prospective hit rate {r.hits}/{r.n} (posterior {pct(r.ev.posterior.mean)}, interval {pct(r.ev.posterior.lo)}–{pct(r.ev.posterior.hi)}) against a {pct(r.base)} base rate.
+              {r.ev.status === 'supported' && ' The lower bound clears the base rate, so this counts as evidence.'}
+              {r.ev.status === 'not_supported' && ' The upper bound sits below the prior, so the combination did not hold up.'}
+              {` It is still ${r.n} video${r.n === 1 ? '' : 's'}.`}
             </CardDescription>
           </CardHeader>
           <CardContent className="flex flex-col gap-2">
-            {detail.vids.map((v) => (
+            {r.vids.map((v) => (
               <div key={v.video_id} className="flex items-center gap-3 text-xs">
                 <span className="w-12 text-muted-foreground">{fmtShortDate(v.posted_at!)}</span>
                 <Link href={`/videos/${v.video_id}`} className="grow font-medium hover:underline">“{v.hook_text ?? 'Untitled reel'}”</Link>
-                <span className="font-semibold tabular-nums">{ratio(v[`${detail.m}_log_ratio`])?.toFixed(1) ?? '—'}×</span>
-                <Badge variant="outline" className="h-[18px] w-9 justify-center text-[10px]">{v[`${detail.m}_hit`] ? 'Hit' : '—'}</Badge>
+                <span className="font-semibold tabular-nums">{ratio(v[`${r.m}_log_ratio`])?.toFixed(1) ?? '—'}×</span>
+                <Badge variant="outline" className="h-[18px] w-9 justify-center text-[10px]">{v[`${r.m}_hit`] ? 'Hit' : '—'}</Badge>
               </div>
             ))}
-            {!detail.vids.length && <div className="text-xs text-muted-foreground">No mature tagged videos yet{detail.tooNew > 0 && ` (${detail.tooNew} posted, too new)`}.</div>}
+            {!r.vids.length && <div className="text-xs text-muted-foreground">No mature tagged videos yet{r.tooNew > 0 && ` (${r.tooNew} posted, too new)`}.</div>}
             <div className="mt-2 flex gap-2">
-              <form action={extendTarget.bind(null, detail.h.id, detail.h.target_n)}><Button variant="outline" size="sm" type="submit">Extend target</Button></form>
-              {detail.status !== 'abandoned' && <form action={closeHypothesis.bind(null, detail.h.id)}><Button variant="ghost" size="sm" type="submit">Close hypothesis</Button></form>}
+              <form action={extendTarget.bind(null, r.h.id, r.h.target_n)}><Button variant="outline" size="sm" type="submit">Extend target</Button></form>
+              {r.status !== 'abandoned' && <form action={closeHypothesis.bind(null, r.h.id)}><Button variant="ghost" size="sm" type="submit">Close hypothesis</Button></form>}
             </div>
           </CardContent>
         </Card>
-      )}
+              ),
+            }))}
+          />
+        </Table>
+      </div>
+      <div id="hyp-detail" className="contents" />
+
     </>
   )
 }

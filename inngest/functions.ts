@@ -1,3 +1,4 @@
+import { NonRetriableError } from 'inngest'
 import { CODEBOOK_VERSION, SYSTEM_PROMPT, codebookDefinition } from '@/lib/labeler/codebook'
 import { labelTranscript } from '@/lib/labeler/index'
 import type { Json } from '@/lib/db/types'
@@ -7,6 +8,15 @@ import { inngest, serviceDb, type BackfillRequested, type VideoProcess } from '.
 
 type StepName = 'metrics' | 'transcribe' | 'label'
 type StepStatus = 'done' | 'skipped'
+
+// Rate limits and exhausted quotas (Groq, Anthropic) will not clear within Inngest's retry window:
+// record the failure once and move on. The next Backfill click retries only what is missing.
+const failFastOnQuota = (e: unknown): never => {
+  const status = (e as { status?: number })?.status
+  const msg = String((e as Error)?.message ?? e)
+  if (status === 429 || status === 402 || /\b(429|402)\b|rate.?limit|quota|insufficient|overloaded/i.test(msg)) throw new NonRetriableError(msg.slice(0, 300))
+  throw e
+}
 
 // Throw on PostgREST error. `opt` allows a null row (maybeSingle); `must` does not.
 const opt = <T>({ data, error }: { data: T; error: unknown }): T => {
@@ -99,7 +109,7 @@ export const processVideo = inngest.createFunction(
       try {
         await step.run(name, async () => {
           const db = serviceDb()
-          const status = await body(db)
+          const status = await body(db).catch(failFastOnQuota)
           await recordStep(db, name, status)
           return status
         })

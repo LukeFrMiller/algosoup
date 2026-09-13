@@ -1,7 +1,8 @@
 'use client'
 // Metric/dimension switching is client-side: the server pre-computes every metric once per page load.
 import Link from 'next/link'
-import { useState } from 'react'
+import { useState, useTransition } from 'react'
+import { metricData } from '@/app/(app)/actions'
 import { Explorer } from './explorer'
 import { Heatmap } from './heatmap'
 import { CHIP, compact, DIMENSIONS, METRICS, mult, pct, plain, shortDate } from './format'
@@ -23,7 +24,7 @@ export type PerMetric = {
   stats: [string, string, string][]
   screened: number
 }
-type Props = { data: Record<Metric, PerMetric>; p0: number; minSample: number }
+type Props = { initial: PerMetric; p0: number; minSample: number }
 
 function Pick<T extends string>({ value, options, onChange }: { value: T; options: Record<T, string>; onChange: (v: T) => void }) {
   return (
@@ -34,15 +35,23 @@ function Pick<T extends string>({ value, options, onChange }: { value: T; option
   )
 }
 
-export function DashboardClient({ data, p0, minSample }: Props) {
-  const [metric, setMetric] = useState<Metric>('views')
+export function DashboardClient({ initial, p0, minSample }: Props) {
+  const [metric, setMetricState] = useState<Metric>('views')
   const [dim, setDim] = useState<Dimension>('hook_device')
-  const d = data[metric]
+  const [cache, setCache] = useState<Partial<Record<Metric, PerMetric>>>({ views: initial })
+  const [loading, start] = useTransition()
+  // Other metrics load once on first use and stay cached for the page's lifetime.
+  const setMetric = (m: Metric) => {
+    setMetricState(m)
+    if (!cache[m]) start(async () => { const pm = await metricData(m); setCache((c) => ({ ...c, [m]: pm })) })
+  }
+  const d = cache[metric] ?? initial
+  const stale = !cache[metric]
   const byMean = (a: LabelStat, b: LabelStat) => b.posterior.mean - a.posterior.mean
   const explorerRows = d.singles.filter((s) => s.dimension === dim && s.value !== 'hook').sort(byMean)
 
   return (
-    <>
+    <div className={`contents ${stale && loading ? 'opacity-50' : ''}`}>
       <div className="flex gap-4">
         {d.stats.map(([label, value, sub]) => (
           <Card key={label} className="flex-1 gap-0.5 px-4 py-3.5">
@@ -132,6 +141,6 @@ export function DashboardClient({ data, p0, minSample }: Props) {
           </TableBody>
         </Table>
       </Card>
-    </>
+    </div>
   )
 }

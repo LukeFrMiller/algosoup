@@ -437,6 +437,7 @@ export type Database = {
           language: string | null
           model: string | null
           owner_id: string
+          search: unknown
           status: string
           text: string | null
           video_id: string
@@ -447,6 +448,7 @@ export type Database = {
           language?: string | null
           model?: string | null
           owner_id: string
+          search?: unknown
           status: string
           text?: string | null
           video_id: string
@@ -457,6 +459,7 @@ export type Database = {
           language?: string | null
           model?: string | null
           owner_id?: string
+          search?: unknown
           status?: string
           text?: string | null
           video_id?: string
@@ -821,6 +824,7 @@ export type Database = {
           saves: number | null
           saves_log_ratio: number | null
           search_text: string | null
+          search_tsv: unknown
           shares: number | null
           thumbnail_url: string | null
           transcript_status: string | null

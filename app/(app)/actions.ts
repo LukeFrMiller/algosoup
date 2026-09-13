@@ -4,6 +4,8 @@ import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
 import type { Metric, Suggestion } from '@/lib/stats/types'
 import type { Labels } from '@/lib/suggestions'
+import { loadDashboard } from '@/lib/dashboard-data'
+import type { PerMetric } from '@/components/dashboard/dashboard-client'
 
 const owner = async (supabase: Awaited<ReturnType<typeof createClient>>) => {
   const { data } = await supabase.auth.getClaims()
@@ -60,4 +62,11 @@ export async function cellVideos(hook: string, beat: string, metric: Metric): Pr
     .order(`${metric}_log_ratio`, { ascending: false })
   if (error) throw new Error(error.message)
   return (data ?? []) as unknown as CellVideo[]
+}
+
+/** Lazy dashboard data for one metric; the page ships only `views` to keep first load small. */
+export async function metricData(metric: Metric): Promise<PerMetric> {
+  const supabase = await createClient()
+  const { data } = await loadDashboard(supabase, [metric])
+  return data[metric]!
 }
