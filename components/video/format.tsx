@@ -8,8 +8,13 @@ export type Metric = 'views' | 'saves' | 'shares' | 'engagement'
 export const METRICS: Metric[] = ['views', 'saves', 'shares', 'engagement']
 
 // First sentence or line of a caption, trimmed to a title-sized string.
+// Skips boilerplate (follow/link-in-bio lines, bare hashtags or mentions) so the title says what the reel is about.
+const BOILERPLATE = /follow (me )?for more|link in bio|^[\s#@\p{Emoji}\p{P}]*$/iu
 export const captionTitle = (c: string | null | undefined, max = 90) => {
-  const first = (c ?? '').split('\n')[0].split(/(?<=[.!?])\s/)[0].trim()
+  const first = (c ?? '')
+    .split(/\n|(?<=[.!?])\s/)
+    .map((x) => x.trim())
+    .find((x) => x && !BOILERPLATE.test(x)) ?? ''
   return first.length > max ? first.slice(0, max - 1).trimEnd() + '…' : first
 }
 export const fmtNum = (n: number | null | undefined) => (n == null ? '—' : n.toLocaleString('en-US'))
