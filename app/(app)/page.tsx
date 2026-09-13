@@ -4,7 +4,7 @@ import { Heatmap } from '@/components/dashboard/heatmap'
 import { ParamSelect } from '@/components/dashboard/param-select'
 import { SuggestionCards } from '@/components/dashboard/suggestion-cards'
 import { asDimension, asMetric, CHIP, compact, DIMENSIONS, METRICS, mult, pct, plain, shortDate, THUMB } from '@/components/dashboard/format'
-import { Button } from '@/components/ui/button'
+import { buttonVariants } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { labelStats, multipleComparisons, pairStats, type BaseRateRow, type DimensionCountRow, type PairCountRow } from '@/lib/stats'
@@ -143,7 +143,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ d
           </div>
           <div className="flex gap-2">
             <ParamSelect name="metric" value={metric} options={METRICS} />
-            <Button variant="outline" nativeButton={false} render={<Link href="/videos" />}>All videos</Button>
+            <Link href="/videos" className={buttonVariants({ variant: 'outline' })}>All videos</Link>
           </div>
         </CardHeader>
         <Table>

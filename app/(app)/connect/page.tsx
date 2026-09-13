@@ -2,7 +2,7 @@ import { revalidatePath } from 'next/cache'
 import { InfoIcon } from 'lucide-react'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
+import { buttonVariants } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { createClient } from '@/lib/supabase/server'
 import { Disconnect, RefreshToken } from '@/components/video/connect'
@@ -61,7 +61,7 @@ export default async function ConnectPage({ searchParams }: { searchParams: Prom
             </div>
             <div className="flex items-center gap-2">
               <RefreshToken />
-              <Button variant="ghost" nativeButton={false} render={<a href="/api/instagram/connect" />}>Reconnect</Button>
+              <a href="/api/instagram/connect" className={buttonVariants({ variant: 'ghost' })}>Reconnect</a>
               <span className="grow" />
               <Disconnect action={disconnect} />
             </div>
@@ -78,7 +78,7 @@ export default async function ConnectPage({ searchParams }: { searchParams: Prom
               <div className="flex items-center gap-2.5"><Chip>instagram_business_basic</Chip><span className="text-muted-foreground">profile and media list</span></div>
               <div className="flex items-center gap-2.5"><Chip>instagram_business_manage_insights</Chip><span className="text-muted-foreground">views, saves, shares, likes, comments, reach</span></div>
             </div>
-            <div><Button size="lg" nativeButton={false} render={<a href="/api/instagram/connect" />}>Continue with Instagram</Button></div>
+            <div><a href="/api/instagram/connect" className={buttonVariants({ size: 'lg' })}>Continue with Instagram</a></div>
             <div className="flex items-start gap-2 rounded-md bg-muted px-3 py-2 text-xs text-muted-foreground">
               <InfoIcon className="mt-0.5 size-3.5 shrink-0" />
               <span>Instagram redirects to the production URL. Local development reads the stored token from the hosted database.</span>
