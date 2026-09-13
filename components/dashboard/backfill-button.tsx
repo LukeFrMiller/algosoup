@@ -42,27 +42,9 @@ export function BackfillButton({ activeRunId }: { activeRunId?: string | null })
     })
   }
 
+  const close = () => { setRunId(null); setRun(null); router.refresh() }
   const pct = run && run.total > 0 ? Math.round(((run.done + run.failed) / run.total) * 100) : 0
   const finished = run?.status !== 'running'
-  return () => { stop = true }
-  }, [runId, router])
-
-  const onClick = () => {
-    if (activeRunId) return setRunId(activeRunId)
-    start(async () => {
-      try {
-        const { run_id } = await triggerBackfill()
-        setRunId(run_id)
-      } catch (e) {
-        toast.error('Backfill failed to start', { description: e instanceof Error ? e.message : String(e) })
-      }
-    })
-  }
-
-  const pct = run && run.total > 0 ? Math.round(((run.done + run.failed) / run.total) * 100) : 0
-  const finished = run?.status !== 'running'
-  const newT = run ? run.steps.transcribe.done + run.steps.transcribe.failed : 0
-  const newL = run ? run.steps.label.done + run.steps.label.failed : 0
 
   return (
     <>
@@ -70,13 +52,13 @@ export function BackfillButton({ activeRunId }: { activeRunId?: string | null })
         <RefreshCwIcon data-icon="inline-start" className={running ? 'animate-spin' : ''} />
         {running ? 'Backfill running' : 'Backfill'}
       </Button>
-      <Dialog open={!!runId} onOpenChange={(o) => { if (!o) { setRunId(null); setRun(null); router.refresh() } }}>
+      <Dialog open={!!runId} onOpenChange={(o) => { if (!o) close() }}>
         <DialogContent className="sm:max-w-[560px]">
           <DialogHeader>
             <DialogTitle>{!run ? 'Starting backfill' : finished ? 'Backfill finished' : 'Backfill running'}</DialogTitle>
             <DialogDescription>
               {run ? `Started ${new Date(run.started_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}. ` : ''}
-              Each reel is its own job, so one failure does not stop the rest.
+              Each reel is its own job and goes metrics → transcribe → label. A reel counts as done once it has been through all three.
             </DialogDescription>
           </DialogHeader>
           {run && (
@@ -84,7 +66,7 @@ export function BackfillButton({ activeRunId }: { activeRunId?: string | null })
               <div className="flex flex-col gap-1.5">
                 <Progress value={pct} />
                 <div className="flex justify-between text-xs text-muted-foreground tabular-nums">
-                  <span>{run.total === 0 ? 'Listing reels…' : `${run.done + run.failed} of ${run.total} reels done`}</span>
+                  <span>{run.total === 0 ? 'Listing reels…' : `${run.done + run.failed} of ${run.total} reels fully processed`}</span>
                   <span>{run.failed} failed</span>
                 </div>
               </div>
@@ -107,7 +89,7 @@ export function BackfillButton({ activeRunId }: { activeRunId?: string | null })
             </div>
           )}
           <DialogFooter>
-            <Button variant="ghost" onClick={() => { setRunId(null); setRun(null); router.refresh() }}>Close</Button>
+            <Button variant="ghost" onClick={close}>Close</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -121,9 +103,7 @@ function Stat({ label, s, total }: { label: string; s: { done: number; skipped: 
     <div className="rounded-lg border p-3">
       <div className="text-xs text-muted-foreground">{label}</div>
       <div className="text-lg font-semibold tabular-nums">{s.done} <span className="text-xs font-normal text-muted-foreground">done</span></div>
-      <div className="text-xs text-muted-foreground tabular-nums">
-        {s.skipped} skipped · {s.failed} failed · {left} to go
-      </div>
+      <div className="text-xs text-muted-foreground tabular-nums">{s.skipped} skipped · {s.failed} failed · {left} to go</div>
     </div>
   )
 }
