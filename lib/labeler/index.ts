@@ -51,7 +51,13 @@ export async function labelTranscript(transcript: string): Promise<LabelResult> 
   })
   const use = res.content.find((b): b is Anthropic.ToolUseBlock => b.type === 'tool_use')
   if (!use) throw new Error(`labeler: no tool_use block (stop_reason=${res.stop_reason})`)
-  const label = LabelSchema.parse(use.input)
+  // Haiku occasionally overruns the length caps; clamp rather than fail the whole video.
+  const raw = use.input as Record<string, unknown>
+  const clamp = (k: string, n: number) => { if (typeof raw[k] === 'string') raw[k] = (raw[k] as string).slice(0, n) }
+  clamp('hook_text', 200); clamp('specific_topic', 60)
+  const parsed = LabelSchema.safeParse(raw)
+  if (!parsed.success) throw new Error(`labeler: ${parsed.error.issues.map((i) => `${i.path.join('.')}: ${i.message}`).join('; ').slice(0, 300)}`)
+  const label = parsed.data
   if (label.beats[0] !== 'hook') throw new Error('labeler: beats[0] must be "hook"')
   return { label, codebook_version: CODEBOOK_VERSION, model: res.model, raw: res }
 }

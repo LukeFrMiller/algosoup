@@ -6,7 +6,8 @@ import { RefreshCwIcon } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Progress } from '@/components/ui/progress'
-import { triggerBackfill } from '@/lib/pipeline/actions'
+import Link from 'next/link'
+import { retryFailed, triggerBackfill } from '@/lib/pipeline/actions'
 import { getRunStatus, type RunStatus } from '@/lib/pipeline/status'
 
 export function BackfillButton({ activeRunId }: { activeRunId?: string | null }) {
@@ -76,14 +77,26 @@ export function BackfillButton({ activeRunId }: { activeRunId?: string | null })
                 <Stat label="Label" s={run.steps.label} total={run.total} />
               </div>
               {run.failures.length > 0 && (
-                <div className="flex flex-col gap-1.5 text-xs">
-                  {run.failures.map((f) => (
-                    <div key={f.video_id + f.step} className="flex justify-between gap-3">
-                      <span className="flex items-center gap-2 truncate"><span className="size-2 shrink-0 rounded-full bg-[#d03b3b]" />{f.label} · {f.step}</span>
-                      <span className="shrink-0 text-muted-foreground truncate max-w-[240px]">{f.error}</span>
-                    </div>
-                  ))}
-                  {run.failed > run.failures.length && <div className="text-muted-foreground">…and {run.failed - run.failures.length} more. Click Backfill again later to retry.</div>}
+                <div className="flex min-w-0 flex-col gap-1.5 text-xs">
+                  <div className="flex items-center justify-between">
+                    <span className="font-medium">{run.failures.length} failed step{run.failures.length === 1 ? '' : 's'}</span>
+                    {finished && (
+                      <Button variant="outline" size="sm" disabled={pending} onClick={() => start(async () => {
+                        try { const r = await retryFailed(run.id); setRun(null); setRunId(r.run_id); toast.success(`Retrying ${r.count} reels`) }
+                        catch (e) { toast.error('Retry failed', { description: e instanceof Error ? e.message : String(e) }) }
+                      })}>Retry failed</Button>
+                    )}
+                  </div>
+                  <div className="max-h-48 overflow-y-auto rounded-md border">
+                    {run.failures.map((f) => (
+                      <div key={f.video_id + f.step} title={f.error ?? ''} className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 border-b px-2 py-1.5 last:border-b-0">
+                        <Link href={`/videos/${f.video_id}`} className="flex min-w-0 items-center gap-2 hover:underline">
+                          <span className="size-2 shrink-0 rounded-full bg-[#d03b3b]" /><span className="truncate">{f.label}</span>
+                        </Link>
+                        <span className="max-w-[220px] truncate text-muted-foreground">{f.step}: {f.error}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               )}
             </div>

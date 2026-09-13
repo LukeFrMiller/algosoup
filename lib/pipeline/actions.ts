@@ -21,6 +21,22 @@ export async function triggerBackfill(): Promise<{ run_id: string }> {
   return { run_id: data.id }
 }
 
+/** Re-runs every video that has a failed step in `runId`, as a new run. */
+export async function retryFailed(runId: string): Promise<{ run_id: string; count: number }> {
+  const { supabase, ownerId } = await ownerDb()
+  const { data: steps, error: e1 } = await supabase.from('pipeline_steps').select('video_id').eq('run_id', runId).eq('status', 'failed')
+  if (e1) throw e1
+  const ids = [...new Set((steps ?? []).map((s) => s.video_id))]
+  if (!ids.length) throw new Error('nothing to retry')
+  const { data: labelled, error: e2 } = await supabase.from('script_labels').select('video_id').in('video_id', ids).eq('codebook_version', CODEBOOK_VERSION)
+  if (e2) throw e2
+  const has = new Set((labelled ?? []).map((l) => l.video_id))
+  const { data: run, error: e3 } = await supabase.from('pipeline_runs').insert({ owner_id: ownerId, kind: 'backfill', total: ids.length }).select('id').single()
+  if (e3) throw e3
+  await inngest.send(ids.map((video_id) => ({ name: 'video.process' as const, data: { owner_id: ownerId, run_id: run.id, video_id, mode: has.has(video_id) ? 'metrics_only' : 'full' } })))
+  return { run_id: run.id, count: ids.length }
+}
+
 export async function triggerVideoRefresh(videoId: string): Promise<{ run_id: string }> {
   const { supabase, ownerId } = await ownerDb()
   const { data: label, error: labelErr } = await supabase

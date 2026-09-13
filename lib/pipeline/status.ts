@@ -27,7 +27,7 @@ export async function getRunStatus(runId: string): Promise<RunStatus | null> {
   for (const r of stepsQ.data ?? []) {
     const s = steps[r.step as keyof typeof steps]
     if (s) s[r.status as 'done' | 'skipped' | 'failed']++
-    if (r.status === 'failed' && failures.length < 10) {
+    if (r.status === 'failed' && failures.length < 200) {
       const v = r.videos as unknown as { caption: string | null; permalink: string } | null
       failures.push({ video_id: r.video_id, step: r.step, error: r.error, label: v?.caption?.slice(0, 60) || v?.permalink || r.video_id })
     }
