@@ -9,7 +9,8 @@ const GRAPH = 'https://graph.instagram.com/v25.0'
 const METRICS = ['views', 'saved', 'shares', 'likes', 'comments', 'reach']
 
 async function getJson<T = any>(url: string, params: Record<string, string>): Promise<T> {
-  const res = await fetch(url + '?' + new URLSearchParams(params))
+  const qs = new URLSearchParams(params).toString()
+  const res = await fetch(qs ? url + (url.includes('?') ? '&' : '?') + qs : url)
   const body = await res.json().catch(() => ({}))
   if (!res.ok) throw new Error(`IG ${res.status}: ${body?.error?.message ?? JSON.stringify(body)}`)
   return body

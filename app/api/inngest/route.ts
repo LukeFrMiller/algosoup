@@ -1,3 +1,5 @@
+// Video download + Whisper can take a while per step.
+export const maxDuration = 300
 import { serve } from 'inngest/next'
 import { inngest } from '@/inngest/client'
 import { backfill, processVideo } from '@/inngest/functions'
