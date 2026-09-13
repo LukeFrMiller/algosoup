@@ -139,6 +139,13 @@ export type Database = {
             foreignKeyName: "hypothesis_videos_video_id_fkey"
             columns: ["video_id"]
             isOneToOne: false
+            referencedRelation: "v_video_list"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "hypothesis_videos_video_id_fkey"
+            columns: ["video_id"]
+            isOneToOne: false
             referencedRelation: "v_video_scores"
             referencedColumns: ["video_id"]
           },
@@ -283,6 +290,13 @@ export type Database = {
             foreignKeyName: "pipeline_steps_video_id_fkey"
             columns: ["video_id"]
             isOneToOne: false
+            referencedRelation: "v_video_list"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pipeline_steps_video_id_fkey"
+            columns: ["video_id"]
+            isOneToOne: false
             referencedRelation: "v_video_scores"
             referencedColumns: ["video_id"]
           },
@@ -365,6 +379,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "v_video_hits"
             referencedColumns: ["video_id"]
+          },
+          {
+            foreignKeyName: "script_labels_video_id_fkey"
+            columns: ["video_id"]
+            isOneToOne: false
+            referencedRelation: "v_video_list"
+            referencedColumns: ["id"]
           },
           {
             foreignKeyName: "script_labels_video_id_fkey"
@@ -459,6 +480,13 @@ export type Database = {
             foreignKeyName: "transcripts_video_id_fkey"
             columns: ["video_id"]
             isOneToOne: true
+            referencedRelation: "v_video_list"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "transcripts_video_id_fkey"
+            columns: ["video_id"]
+            isOneToOne: true
             referencedRelation: "v_video_scores"
             referencedColumns: ["video_id"]
           },
@@ -530,6 +558,13 @@ export type Database = {
             foreignKeyName: "video_metric_snapshots_video_id_fkey"
             columns: ["video_id"]
             isOneToOne: false
+            referencedRelation: "v_video_list"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "video_metric_snapshots_video_id_fkey"
+            columns: ["video_id"]
+            isOneToOne: false
             referencedRelation: "v_video_scores"
             referencedColumns: ["video_id"]
           },
@@ -593,6 +628,13 @@ export type Database = {
             isOneToOne: true
             referencedRelation: "v_video_hits"
             referencedColumns: ["video_id"]
+          },
+          {
+            foreignKeyName: "video_metrics_video_id_fkey"
+            columns: ["video_id"]
+            isOneToOne: true
+            referencedRelation: "v_video_list"
+            referencedColumns: ["id"]
           },
           {
             foreignKeyName: "video_metrics_video_id_fkey"
@@ -692,6 +734,13 @@ export type Database = {
             foreignKeyName: "script_labels_video_id_fkey"
             columns: ["video_id"]
             isOneToOne: false
+            referencedRelation: "v_video_list"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "script_labels_video_id_fkey"
+            columns: ["video_id"]
+            isOneToOne: false
             referencedRelation: "v_video_scores"
             referencedColumns: ["video_id"]
           },
@@ -755,6 +804,35 @@ export type Database = {
           video_id: string | null
         }
         Relationships: []
+      }
+      v_video_list: {
+        Row: {
+          caption: string | null
+          codebook_version: number | null
+          engagement: number | null
+          hook_device: string | null
+          hook_text: string | null
+          id: string | null
+          owner_id: string | null
+          permalink: string | null
+          posted_at: string | null
+          saves: number | null
+          saves_log_ratio: number | null
+          shares: number | null
+          thumbnail_url: string | null
+          transcript_status: string | null
+          views: number | null
+          views_log_ratio: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "script_labels_codebook_version_fkey"
+            columns: ["codebook_version"]
+            isOneToOne: false
+            referencedRelation: "codebooks"
+            referencedColumns: ["version"]
+          },
+        ]
       }
       v_video_scores: {
         Row: {
