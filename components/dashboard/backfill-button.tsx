@@ -44,6 +44,23 @@ export function BackfillButton({ activeRunId }: { activeRunId?: string | null })
 
   const pct = run && run.total > 0 ? Math.round(((run.done + run.failed) / run.total) * 100) : 0
   const finished = run?.status !== 'running'
+  return () => { stop = true }
+  }, [runId, router])
+
+  const onClick = () => {
+    if (activeRunId) return setRunId(activeRunId)
+    start(async () => {
+      try {
+        const { run_id } = await triggerBackfill()
+        setRunId(run_id)
+      } catch (e) {
+        toast.error('Backfill failed to start', { description: e instanceof Error ? e.message : String(e) })
+      }
+    })
+  }
+
+  const pct = run && run.total > 0 ? Math.round(((run.done + run.failed) / run.total) * 100) : 0
+  const finished = run?.status !== 'running'
   const newT = run ? run.steps.transcribe.done + run.steps.transcribe.failed : 0
   const newL = run ? run.steps.label.done + run.steps.label.failed : 0
 
@@ -72,9 +89,9 @@ export function BackfillButton({ activeRunId }: { activeRunId?: string | null })
                 </div>
               </div>
               <div className="grid grid-cols-3 gap-3">
-                <Stat label="Metrics" value={run.steps.metrics.done} of={run.total} sub={`${run.steps.metrics.failed} failed`} />
-                <Stat label="Transcribe" value={run.steps.transcribe.done} of={newT} sub={`${run.steps.transcribe.skipped} skipped, already have`} />
-                <Stat label="Label" value={run.steps.label.done} of={newL} sub={`${run.steps.label.skipped} skipped, already have`} />
+                <Stat label="Metrics" s={run.steps.metrics} total={run.total} />
+                <Stat label="Transcribe" s={run.steps.transcribe} total={run.total} />
+                <Stat label="Label" s={run.steps.label} total={run.total} />
               </div>
               {run.failures.length > 0 && (
                 <div className="flex flex-col gap-1.5 text-xs">
@@ -98,12 +115,15 @@ export function BackfillButton({ activeRunId }: { activeRunId?: string | null })
   )
 }
 
-function Stat({ label, value, of, sub }: { label: string; value: number; of: number; sub: string }) {
+function Stat({ label, s, total }: { label: string; s: { done: number; skipped: number; failed: number }; total: number }) {
+  const left = Math.max(0, total - s.done - s.skipped - s.failed)
   return (
     <div className="rounded-lg border p-3">
       <div className="text-xs text-muted-foreground">{label}</div>
-      <div className="text-lg font-semibold tabular-nums">{value} <span className="text-xs font-normal text-muted-foreground">/ {of}</span></div>
-      <div className="text-xs text-muted-foreground">{sub}</div>
+      <div className="text-lg font-semibold tabular-nums">{s.done} <span className="text-xs font-normal text-muted-foreground">done</span></div>
+      <div className="text-xs text-muted-foreground tabular-nums">
+        {s.skipped} skipped · {s.failed} failed · {left} to go
+      </div>
     </div>
   )
 }
