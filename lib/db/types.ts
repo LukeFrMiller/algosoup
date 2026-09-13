@@ -771,6 +771,7 @@ export type Database = {
       }
       v_top_videos: {
         Row: {
+          caption: string | null
           engagement: number | null
           engagement_baseline: number | null
           engagement_hit: boolean | null

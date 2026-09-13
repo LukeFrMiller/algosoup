@@ -148,7 +148,7 @@ export const processVideo = inngest.createFunction(
         )
         if (existing) return 'skipped'
         const t = opt(await db.from('transcripts').select('status,text').eq('video_id', video_id).maybeSingle())
-        if (t?.status !== 'ok' || !t.text) return 'skipped'
+        if (t?.status !== 'ok' || !t.text || t.text.trim().length < 40) return 'skipped' // no speech: nothing to label
         const { label, codebook_version, model, raw } = await labelTranscript(t.text)
         opt(await db.from('script_labels').insert({ video_id, owner_id, codebook_version, model, raw: raw as Json, ...label }))
         return 'done'
