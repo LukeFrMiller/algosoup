@@ -13,12 +13,23 @@ async function ownerDb() {
   return { supabase, ownerId }
 }
 
-export async function triggerBackfill(): Promise<{ run_id: string }> {
+/** The most recent run still in progress (started in the last 2h), if any. */
+export async function activeRun(): Promise<{ run_id: string } | null> {
+  const { supabase } = await ownerDb()
+  const since = new Date(Date.now() - 2 * 3600e3).toISOString()
+  const { data } = await supabase.from('pipeline_runs').select('id').eq('status', 'running').gt('started_at', since).order('started_at', { ascending: false }).limit(1).maybeSingle()
+  return data ? { run_id: data.id } : null
+}
+
+/** Starts a backfill, or returns the one already running so the UI attaches to it instead of double-queuing. */
+export async function triggerBackfill(): Promise<{ run_id: string; attached: boolean }> {
+  const existing = await activeRun()
+  if (existing) return { ...existing, attached: true }
   const { supabase, ownerId } = await ownerDb()
   const { data, error } = await supabase.from('pipeline_runs').insert({ owner_id: ownerId, kind: 'backfill' }).select('id').single()
   if (error) throw error
   await inngest.send({ name: 'backfill.requested', data: { owner_id: ownerId, run_id: data.id } })
-  return { run_id: data.id }
+  return { run_id: data.id, attached: false }
 }
 
 /** Re-runs every video that has a failed step in `runId`, as a new run. */

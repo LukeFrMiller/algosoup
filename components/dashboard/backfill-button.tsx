@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Progress } from '@/components/ui/progress'
 import Link from 'next/link'
-import { retryFailed, triggerBackfill } from '@/lib/pipeline/actions'
+import { activeRun, retryFailed, triggerBackfill } from '@/lib/pipeline/actions'
 import { getRunStatus, type RunStatus } from '@/lib/pipeline/status'
 
 export function BackfillButton({ activeRunId }: { activeRunId?: string | null }) {
@@ -15,7 +15,20 @@ export function BackfillButton({ activeRunId }: { activeRunId?: string | null })
   const [pending, start] = useTransition()
   const [runId, setRunId] = useState<string | null>(null)
   const [run, setRun] = useState<RunStatus | null>(null)
-  const running = !!activeRunId && !runId
+  const [active, setActive] = useState<string | null>(activeRunId ?? null)
+  const running = !!active && !runId
+
+  // The layout that passes activeRunId can be served from the router cache, so keep our own view fresh.
+  useEffect(() => {
+    let stop = false
+    const tick = async () => {
+      const a = await activeRun().catch(() => null)
+      if (!stop) setActive(a?.run_id ?? null)
+    }
+    tick()
+    const t = setInterval(tick, 20_000)
+    return () => { stop = true; clearInterval(t) }
+  }, [])
 
   useEffect(() => {
     if (!runId) return
@@ -24,7 +37,7 @@ export function BackfillButton({ activeRunId }: { activeRunId?: string | null })
       const s = await getRunStatus(runId).catch(() => null)
       if (stop) return
       if (s) setRun(s)
-      if (s && s.status !== 'running') { router.refresh(); return }
+      if (s && s.status !== 'running') { setActive(null); router.refresh(); return }
       setTimeout(tick, 3000)
     }
     tick()
@@ -32,10 +45,12 @@ export function BackfillButton({ activeRunId }: { activeRunId?: string | null })
   }, [runId, router])
 
   const onClick = () => {
-    if (activeRunId) return setRunId(activeRunId)
+    if (active) return setRunId(active)
     start(async () => {
       try {
-        const { run_id } = await triggerBackfill()
+        const { run_id, attached } = await triggerBackfill()
+        if (attached) toast.info('A backfill is already running')
+        setActive(run_id)
         setRunId(run_id)
       } catch (e) {
         toast.error('Backfill failed to start', { description: e instanceof Error ? e.message : String(e) })
