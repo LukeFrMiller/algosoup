@@ -1,0 +1,32 @@
+<!--NAV:D-->
+<div class="page" style="max-width:720px">
+  <div><h1 class="h1">Connect Instagram</h1><div class="sub">AlgoSoup reads your reels and their insights. It never posts, comments, or stores video files.</div></div>
+  <div class="card">
+    <div class="card-h"><div class="card-t">No account connected</div><div class="card-d">You need a Professional (Business or Creator) Instagram account. You will be sent to Instagram to approve two permissions.</div></div>
+    <div class="card-c" style="display:flex;flex-direction:column;gap:16px">
+      <div class="col" style="gap:8px">
+        <div class="row" style="gap:10px"><span class="chip">instagram_business_basic</span><span class="sub">profile and media list</span></div>
+        <div class="row" style="gap:10px"><span class="chip">instagram_business_manage_insights</span><span class="sub">views, saves, shares, likes, comments, reach</span></div>
+      </div>
+      <div><a class="btn lg" href="#">Continue with Instagram</a></div>
+      <div class="note"><svg class="ico" viewBox="0 0 16 16" fill="none" stroke="#737373" stroke-width="1.5"><circle cx="8" cy="8" r="6.5"></circle><path d="M8 7v4M8 5v.5"></path></svg><span>Instagram redirects to the production URL. Local development reads the stored token from the hosted database.</span></div>
+    </div>
+  </div>
+
+  <div class="sep"></div>
+  <div class="sub">After connecting, this page becomes:</div>
+  <div class="card">
+    <div class="card-h" style="flex-direction:row;justify-content:space-between;align-items:flex-start">
+      <div><div class="card-t">@lukebuilds</div><div class="card-d">Creator account · 12,480 followers · connected 3 Sep 2026</div></div>
+      <span class="badge out"><span class="dot" style="background:#0ca30c;margin-right:6px"></span>Token healthy</span>
+    </div>
+    <div class="card-c" style="display:flex;flex-direction:column;gap:16px">
+      <div style="display:grid;grid-template-columns:repeat(3, minmax(0, 1fr));gap:16px">
+        <div class="col" style="gap:2px"><span class="sub">Token expires</span><span style="font-weight:500">2 Nov 2026 <span class="muted">(50 days)</span></span></div>
+        <div class="col" style="gap:2px"><span class="sub">Last refreshed</span><span style="font-weight:500">13 Sep 2026, 09:12</span></div>
+        <div class="col" style="gap:2px"><span class="sub">Auto-refresh</span><span style="font-weight:500">before every backfill, once under 14 days left</span></div>
+      </div>
+      <div class="row"><a class="btn outline" href="#">Refresh token now</a><a class="btn ghost" href="#">Reconnect</a><span class="spacer"></span><a class="btn ghost" href="#" style="color:#d03b3b">Disconnect</a></div>
+    </div>
+  </div>
+</div>

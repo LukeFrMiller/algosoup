@@ -1,0 +1,53 @@
+{
+  "_note": "PLACEHOLDER until the owner supplies real transcripts. Fake-but-realistic reels, hand-labelled to probe codebook boundaries.",
+  "items": [
+    {
+      "id": "rhetorical_is_claim",
+      "probe": "rhetorical question answered immediately -> bold_claim, not question",
+      "transcript": "Why do most bakery reels die at two seconds? Because the first frame is a shot of your storefront and nobody cares about your storefront. They care about the croissant. So I stopped opening on the shop and started opening on the lamination, mid-fold, butter visible. Watch time went from three seconds to nine on the exact same recipe video. Try it on your next post: crop out the building, start on the thing people came for. And if you want my shot list for pastry reels, comment LAYERS and I'll send it over.",
+      "hook_text": "Why do most bakery reels die at two seconds? Because the first frame is a shot of your storefront and nobody cares about your storefront.",
+      "hook_device": "bold_claim",
+      "beats": ["hook", "steps", "proof", "cta"]
+    },
+    {
+      "id": "warning_not_contrarian",
+      "probe": "imperative stop + behaviour, no consensus quoted -> negative_warning",
+      "transcript": "Stop putting your call to action at the very end of the reel. Here's the thing: eighty percent of the people who start your video are gone by the last second, so your ask is playing to an empty room. What I do now is drop the ask right after the payoff, somewhere in the middle, and then keep going with one more tip so the video doesn't feel like it ended. On my last ten reels that moved comments from about twelve per post to over forty. Save this so you remember it next time you're editing.",
+      "hook_text": "Stop putting your call to action at the very end of the reel.",
+      "hook_device": "negative_warning",
+      "beats": ["hook", "problem", "steps", "proof", "cta"]
+    },
+    {
+      "id": "contrarian_not_warning",
+      "probe": "consensus quoted then negated -> contrarian, with counter_positioning beat",
+      "transcript": "Everyone tells you to post a reel every single day, and honestly that advice is why your account is stuck. The daily posters I know are burnt out and their views are flat. I post twice a week. Each one gets a real hook, a real edit, and a real idea, and my reach has tripled since I slowed down. The algorithm doesn't reward volume, it rewards people watching to the end. So pick two days, make them count, and stop feeling guilty about the other five. Follow for the rest of the slow-posting playbook.",
+      "hook_text": "Everyone tells you to post a reel every single day, and honestly that advice is why your account is stuck.",
+      "hook_device": "contrarian",
+      "beats": ["hook", "counter_positioning", "proof", "payoff", "cta"]
+    },
+    {
+      "id": "story_not_context",
+      "probe": "anecdote with time anchor -> story_open; neutral background later -> context beat",
+      "transcript": "Two years ago I filmed a reel sitting on my kitchen floor at eleven at night, and it got four views. Four. At the time I was running a two-person cake business out of a rented kitchen and had zero idea what a hook was. The one thing I changed was the first line. Instead of hi guys today we're making a cake, I opened with this is the wrong way to frost a cake. Same cake, same lighting, same me. That version got sixty thousand views. The lesson is that nobody clicks for the cake, they click for the tension. Comment FROST and I'll send you the ten openers I rotate now.",
+      "hook_text": "Two years ago I filmed a reel sitting on my kitchen floor at eleven at night, and it got four views.",
+      "hook_device": "story_open",
+      "beats": ["hook", "context", "example", "proof", "payoff", "cta"]
+    },
+    {
+      "id": "list_promise_with_steps",
+      "probe": "enumerated promise -> list_promise; the enumerated body -> steps beat, not example",
+      "transcript": "Here are the three things I check before I post any reel. One, is the first frame readable on a phone without sound, because most people watch muted. Two, does the video make a promise in the first sentence that it actually pays off. Three, is there a reason to keep watching after the payoff, like a bonus tip or a mistake to avoid. If any of those is a no, I don't post it, I fix it. This checklist took my average watch time from four seconds to eleven. Save this for your next edit.",
+      "hook_text": "Here are the three things I check before I post any reel.",
+      "hook_device": "list_promise",
+      "beats": ["hook", "steps", "proof", "cta"]
+    },
+    {
+      "id": "genuine_question",
+      "probe": "open question, not answered by a claim -> question; joke -> aside",
+      "transcript": "Do you ever open Instagram to post something and then just scroll for forty minutes and post nothing? Yeah, me too, that's why there's flour on my phone. The fix that actually worked for me is boring: I film in the morning, I edit in the app with the feed muted, and I schedule it before I let myself look at anything. Posting stopped being a mood and became a chore that takes twenty minutes. That's it, that's the whole system. If you want the exact schedule I use, it's in my bio.",
+      "hook_text": "Do you ever open Instagram to post something and then just scroll for forty minutes and post nothing?",
+      "hook_device": "question",
+      "beats": ["hook", "aside", "steps", "payoff", "cta"]
+    }
+  ]
+}

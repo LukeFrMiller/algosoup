@@ -1,0 +1,17 @@
+{
+  "artboards": [
+    { "file": "Login.dc.html",      "x": 0,    "y": 0,    "w": 1440, "h": 900,  "title": "1 · Login" },
+    { "file": "Connect.dc.html",    "x": 1560, "y": 0,    "w": 1440, "h": 900,  "title": "2 · Connect Instagram" },
+    { "file": "Main.dc.html",       "x": 0,    "y": 1040, "w": 1440, "h": 2060, "title": "3 · Dashboard" },
+    { "file": "CellDetail.dc.html", "x": 1560, "y": 1040, "w": 480,  "h": 900,  "title": "3a · Heatmap cell drilldown (sheet)" },
+    { "file": "Backfill.dc.html",   "x": 2160, "y": 1040, "w": 560,  "h": 420,  "title": "3b · Backfill progress (dialog)" },
+    { "file": "Video.dc.html",      "x": 0,    "y": 3200, "w": 1440, "h": 1000, "title": "4 · Video detail" },
+    { "file": "Hypotheses.dc.html", "x": 1560, "y": 3200, "w": 1440, "h": 740, "title": "5 · Hypotheses" }
+  ],
+  "annotations": [
+    { "id": "flow", "x": 0, "y": -200, "w": 520, "text": "Flow: Login → Connect Instagram (only when no account) → Dashboard.\nDashboard: suggestions → stat row → hit rate by label → heatmap → best reels.\nHeatmap cell click opens the sheet (3a). Backfill button opens the dialog (3b).\nAccept on a suggestion card creates a row on Hypotheses (5). Tagging happens on Video detail (4)." },
+    { "id": "honesty", "x": 1560, "y": -200, "w": 520, "text": "Honesty rules baked into the UI:\n• every bar and cell prints hits/n\n• n < 5 dims to 40%, never hidden\n• 90% interval whisker on every bar\n• stat row states how many combinations were screened and how many will look good by chance\n• hypothesis verdicts say 'evidence, not proof'" },
+    { "id": "theme", "x": 2160, "y": -200, "w": 440, "text": "Visuals match the installed shadcn base-mira neutral theme: Inter, 28px controls, 7px radius, #e5e5e5 borders. The only colour is one sequential blue ramp for hit rate plus green/amber/red status dots with labels." }
+  ],
+  "launch": { "view": "canvas" }
+}

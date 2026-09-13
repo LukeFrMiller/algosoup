@@ -1,0 +1,109 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap">
+  <style>
+*{box-sizing:border-box}
+body{margin:0;background:#fff;color:#0a0a0a;font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;font-size:13px;line-height:1.5;-webkit-font-smoothing:antialiased}
+a{color:#0a0a0a} a:hover{color:#525252}
+.nav{height:48px;border-bottom:1px solid #e5e5e5;display:flex;align-items:center;gap:24px;padding:0 24px;background:#fff}
+.brand{font-weight:600;font-size:13px;display:flex;align-items:center;gap:8px}
+.navlinks{display:flex;gap:4px}
+.navlink{padding:4px 8px;border-radius:5.76px;color:#737373;font-size:12px;font-weight:500}
+.navlink.on{color:#0a0a0a;background:#f5f5f5}
+.spacer{flex-grow:1}
+.btn{height:28px;padding:0 8px;border-radius:5.76px;border:1px solid transparent;background:#171717;color:#fafafa;font-size:12px;font-weight:500;display:inline-flex;align-items:center;gap:4px;white-space:nowrap}
+.btn.outline{background:#fff;color:#0a0a0a;border-color:#e5e5e5}
+.btn.ghost{background:transparent;color:#0a0a0a}
+.btn.sm{height:24px;padding:0 8px}
+.btn.lg{height:32px;padding:0 10px}
+.btn.wide{width:100%;justify-content:center}
+.muted{color:#737373}
+.mono{font-family:"Geist Mono",ui-monospace,Menlo,monospace}
+.tnum{font-variant-numeric:tabular-nums}
+.card{background:#fff;border:1px solid #e5e5e5;border-radius:7.2px}
+.card-h{padding:16px 16px 0 16px;display:flex;flex-direction:column;gap:2px}
+.card-t{font-size:13px;font-weight:600;line-height:1.3}
+.card-d{font-size:12px;color:#737373}
+.card-c{padding:16px}
+.badge{display:inline-flex;align-items:center;height:20px;padding:0 8px;border-radius:9999px;font-size:11px;font-weight:500;border:1px solid transparent;white-space:nowrap}
+.badge.sec{background:#f5f5f5;color:#0a0a0a}
+.badge.out{border-color:#e5e5e5;color:#0a0a0a;background:#fff}
+.badge.dark{background:#171717;color:#fafafa}
+.chip{display:inline-flex;align-items:center;height:22px;padding:0 8px;border-radius:5.76px;background:#f5f5f5;font-size:12px;font-weight:500;font-family:"Geist Mono",ui-monospace,Menlo,monospace}
+.sel{height:28px;padding:0 10px;border-radius:5.76px;border:1px solid #e5e5e5;background:#fff;font-size:12px;display:inline-flex;align-items:center;gap:8px;min-width:150px;justify-content:space-between}
+.input{height:28px;padding:0 10px;border-radius:5.76px;border:1px solid #e5e5e5;background:#fff;font-size:12px;display:flex;align-items:center;color:#737373}
+.label{font-size:12px;font-weight:500}
+.page{padding:24px;display:flex;flex-direction:column;gap:24px;max-width:1392px}
+.h1{font-size:18px;font-weight:600;margin:0;line-height:1.3}
+.h2{font-size:14px;font-weight:600;margin:0;line-height:1.3}
+.sub{font-size:12px;color:#737373}
+.row{display:flex;align-items:center;gap:8px}
+.col{display:flex;flex-direction:column;gap:8px}
+table{border-collapse:collapse;width:100%;font-size:12px}
+th{text-align:left;font-weight:500;color:#737373;padding:8px 12px;border-bottom:1px solid #e5e5e5;height:36px}
+td{padding:8px 12px;border-bottom:1px solid #e5e5e5;vertical-align:middle}
+tr:last-child td{border-bottom:none}
+.num{text-align:right;font-variant-numeric:tabular-nums}
+.thumb{width:36px;height:48px;border-radius:4px;background:#e5e5e5;flex-shrink:0}
+.dot{width:8px;height:8px;border-radius:50%;display:inline-block}
+.note{font-size:12px;color:#737373;background:#f5f5f5;border-radius:5.76px;padding:8px 12px;display:flex;gap:8px;align-items:flex-start}
+.ico{width:14px;height:14px;flex-shrink:0}
+.kbd{font-size:11px;border:1px solid #e5e5e5;border-radius:4px;padding:0 4px;color:#737373}
+.prog{height:6px;background:#f5f5f5;border-radius:9999px;overflow:hidden;width:100%}
+.prog>div{height:100%;background:#171717;border-radius:9999px}
+.sep{height:1px;background:#e5e5e5}
+.vsep{width:1px;background:#e5e5e5;align-self:stretch}
+
+  </style>
+</helmet>
+<div class="nav">
+  <div class="brand"><svg class="ico" viewBox="0 0 16 16" fill="none" stroke="#0a0a0a" stroke-width="1.5"><circle cx="8" cy="8" r="6.5"></circle><path d="M4.5 9.5c1.2 1.4 5.8 1.4 7 0"></path></svg>AlgoSoup</div>
+  <div class="navlinks"><a class="navlink " href="#">Dashboard</a><a class="navlink " href="#">Hypotheses</a><a class="navlink " href="#">Videos</a><a class="navlink on" href="#">Connect</a></div>
+  <div class="spacer"></div>
+  <span class="sub">@lukebuilds · last refreshed 2h ago</span>
+  <a class="btn outline" href="#"><svg class="ico" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13 8a5 5 0 1 1-1.5-3.6"></path><path d="M13 2v3h-3"></path></svg>Backfill</a>
+  <div style="width:24px;height:24px;border-radius:50%;background:#e5e5e5"></div>
+</div>
+
+<div class="page" style="max-width:720px">
+  <div><h1 class="h1">Connect Instagram</h1><div class="sub">AlgoSoup reads your reels and their insights. It never posts, comments, or stores video files.</div></div>
+  <div class="card">
+    <div class="card-h"><div class="card-t">No account connected</div><div class="card-d">You need a Professional (Business or Creator) Instagram account. You will be sent to Instagram to approve two permissions.</div></div>
+    <div class="card-c" style="display:flex;flex-direction:column;gap:16px">
+      <div class="col" style="gap:8px">
+        <div class="row" style="gap:10px"><span class="chip">instagram_business_basic</span><span class="sub">profile and media list</span></div>
+        <div class="row" style="gap:10px"><span class="chip">instagram_business_manage_insights</span><span class="sub">views, saves, shares, likes, comments, reach</span></div>
+      </div>
+      <div><a class="btn lg" href="#">Continue with Instagram</a></div>
+      <div class="note"><svg class="ico" viewBox="0 0 16 16" fill="none" stroke="#737373" stroke-width="1.5"><circle cx="8" cy="8" r="6.5"></circle><path d="M8 7v4M8 5v.5"></path></svg><span>Instagram redirects to the production URL. Local development reads the stored token from the hosted database.</span></div>
+    </div>
+  </div>
+
+  <div class="sep"></div>
+  <div class="sub">After connecting, this page becomes:</div>
+  <div class="card">
+    <div class="card-h" style="flex-direction:row;justify-content:space-between;align-items:flex-start">
+      <div><div class="card-t">@lukebuilds</div><div class="card-d">Creator account · 12,480 followers · connected 3 Sep 2026</div></div>
+      <span class="badge out"><span class="dot" style="background:#0ca30c;margin-right:6px"></span>Token healthy</span>
+    </div>
+    <div class="card-c" style="display:flex;flex-direction:column;gap:16px">
+      <div style="display:grid;grid-template-columns:repeat(3, minmax(0, 1fr));gap:16px">
+        <div class="col" style="gap:2px"><span class="sub">Token expires</span><span style="font-weight:500">2 Nov 2026 <span class="muted">(50 days)</span></span></div>
+        <div class="col" style="gap:2px"><span class="sub">Last refreshed</span><span style="font-weight:500">13 Sep 2026, 09:12</span></div>
+        <div class="col" style="gap:2px"><span class="sub">Auto-refresh</span><span style="font-weight:500">before every backfill, once under 14 days left</span></div>
+      </div>
+      <div class="row"><a class="btn outline" href="#">Refresh token now</a><a class="btn ghost" href="#">Reconnect</a><span class="spacer"></span><a class="btn ghost" href="#" style="color:#d03b3b">Disconnect</a></div>
+    </div>
+  </div>
+</div>
+
+</x-dc>
+</body>
+</html>

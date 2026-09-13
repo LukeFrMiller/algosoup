@@ -1,0 +1,88 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap">
+  <style>
+*{box-sizing:border-box}
+body{margin:0;background:#fff;color:#0a0a0a;font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;font-size:13px;line-height:1.5;-webkit-font-smoothing:antialiased}
+a{color:#0a0a0a} a:hover{color:#525252}
+.nav{height:48px;border-bottom:1px solid #e5e5e5;display:flex;align-items:center;gap:24px;padding:0 24px;background:#fff}
+.brand{font-weight:600;font-size:13px;display:flex;align-items:center;gap:8px}
+.navlinks{display:flex;gap:4px}
+.navlink{padding:4px 8px;border-radius:5.76px;color:#737373;font-size:12px;font-weight:500}
+.navlink.on{color:#0a0a0a;background:#f5f5f5}
+.spacer{flex-grow:1}
+.btn{height:28px;padding:0 8px;border-radius:5.76px;border:1px solid transparent;background:#171717;color:#fafafa;font-size:12px;font-weight:500;display:inline-flex;align-items:center;gap:4px;white-space:nowrap}
+.btn.outline{background:#fff;color:#0a0a0a;border-color:#e5e5e5}
+.btn.ghost{background:transparent;color:#0a0a0a}
+.btn.sm{height:24px;padding:0 8px}
+.btn.lg{height:32px;padding:0 10px}
+.btn.wide{width:100%;justify-content:center}
+.muted{color:#737373}
+.mono{font-family:"Geist Mono",ui-monospace,Menlo,monospace}
+.tnum{font-variant-numeric:tabular-nums}
+.card{background:#fff;border:1px solid #e5e5e5;border-radius:7.2px}
+.card-h{padding:16px 16px 0 16px;display:flex;flex-direction:column;gap:2px}
+.card-t{font-size:13px;font-weight:600;line-height:1.3}
+.card-d{font-size:12px;color:#737373}
+.card-c{padding:16px}
+.badge{display:inline-flex;align-items:center;height:20px;padding:0 8px;border-radius:9999px;font-size:11px;font-weight:500;border:1px solid transparent;white-space:nowrap}
+.badge.sec{background:#f5f5f5;color:#0a0a0a}
+.badge.out{border-color:#e5e5e5;color:#0a0a0a;background:#fff}
+.badge.dark{background:#171717;color:#fafafa}
+.chip{display:inline-flex;align-items:center;height:22px;padding:0 8px;border-radius:5.76px;background:#f5f5f5;font-size:12px;font-weight:500;font-family:"Geist Mono",ui-monospace,Menlo,monospace}
+.sel{height:28px;padding:0 10px;border-radius:5.76px;border:1px solid #e5e5e5;background:#fff;font-size:12px;display:inline-flex;align-items:center;gap:8px;min-width:150px;justify-content:space-between}
+.input{height:28px;padding:0 10px;border-radius:5.76px;border:1px solid #e5e5e5;background:#fff;font-size:12px;display:flex;align-items:center;color:#737373}
+.label{font-size:12px;font-weight:500}
+.page{padding:24px;display:flex;flex-direction:column;gap:24px;max-width:1392px}
+.h1{font-size:18px;font-weight:600;margin:0;line-height:1.3}
+.h2{font-size:14px;font-weight:600;margin:0;line-height:1.3}
+.sub{font-size:12px;color:#737373}
+.row{display:flex;align-items:center;gap:8px}
+.col{display:flex;flex-direction:column;gap:8px}
+table{border-collapse:collapse;width:100%;font-size:12px}
+th{text-align:left;font-weight:500;color:#737373;padding:8px 12px;border-bottom:1px solid #e5e5e5;height:36px}
+td{padding:8px 12px;border-bottom:1px solid #e5e5e5;vertical-align:middle}
+tr:last-child td{border-bottom:none}
+.num{text-align:right;font-variant-numeric:tabular-nums}
+.thumb{width:36px;height:48px;border-radius:4px;background:#e5e5e5;flex-shrink:0}
+.dot{width:8px;height:8px;border-radius:50%;display:inline-block}
+.note{font-size:12px;color:#737373;background:#f5f5f5;border-radius:5.76px;padding:8px 12px;display:flex;gap:8px;align-items:flex-start}
+.ico{width:14px;height:14px;flex-shrink:0}
+.kbd{font-size:11px;border:1px solid #e5e5e5;border-radius:4px;padding:0 4px;color:#737373}
+.prog{height:6px;background:#f5f5f5;border-radius:9999px;overflow:hidden;width:100%}
+.prog>div{height:100%;background:#171717;border-radius:9999px}
+.sep{height:1px;background:#e5e5e5}
+.vsep{width:1px;background:#e5e5e5;align-self:stretch}
+
+  </style>
+</helmet>
+<div style="width:480px;min-height:900px;background:#fff;border-left:1px solid #e5e5e5;display:flex;flex-direction:column">
+  <div style="padding:16px 20px;display:flex;flex-direction:column;gap:8px;border-bottom:1px solid #e5e5e5">
+    <div class="row" style="justify-content:space-between"><div class="row" style="gap:6px"><span class="chip">hook: bold_claim</span><span class="muted">×</span><span class="chip">beat: proof</span></div><a class="btn ghost sm" href="#">✕</a></div>
+    <div class="row" style="gap:16px;font-size:12px"><span><b style="font-weight:600">43%</b> <span class="muted">posterior hit rate</span></span><span><b style="font-weight:600">11/24</b> <span class="muted">hits</span></span><span><b style="font-weight:600">28–58%</b> <span class="muted">90% interval</span></span></div>
+    <div class="row" style="gap:16px;font-size:12px"><span><b style="font-weight:600">+11 pts</b> <span class="muted">vs bold_claim alone</span></span><span><b style="font-weight:600">+0.1</b> <span class="muted">synergy (≈ additive)</span></span><span><b style="font-weight:600">0.038</b> <span class="muted">WRAcc</span></span></div>
+    <div class="row"><a class="btn sm" href="#">Accept as hypothesis</a><span class="sub">1 of 216 screened combinations</span></div>
+  </div>
+  <div style="padding:8px 20px;display:flex;flex-direction:column">
+    <div class="row" style="justify-content:space-between;height:32px"><span class="sub">24 videos · sorted by views vs baseline</span><div class="sel" style="min-width:100px;height:24px">Views <svg class="ico" viewBox="0 0 16 16" fill="none" stroke="#737373" stroke-width="1.5"><path d="M4 6l4 4 4-4"></path></svg></div></div>
+    <div class="row" style="gap:12px;padding:10px 0;border-bottom:1px solid #e5e5e5"><div class="thumb"></div><div style="flex-grow:1;min-width:0"><div style="font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">“This is the only prompt structure that works”</div><div class="sub">Aug 9 · 41.3K views</div></div><div class="col" style="gap:0;align-items:flex-end"><span class="tnum" style="font-weight:600">2.3×</span><span class="badge out" style="height:18px;font-size:10px;color:#0a0a0a">Hit</span></div></div>
+<div class="row" style="gap:12px;padding:10px 0;border-bottom:1px solid #e5e5e5"><div class="thumb"></div><div style="flex-grow:1;min-width:0"><div style="font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">“Every creator over 10K does this one thing”</div><div class="sub">Jul 12 · 33.0K views</div></div><div class="col" style="gap:0;align-items:flex-end"><span class="tnum" style="font-weight:600">1.9×</span><span class="badge out" style="height:18px;font-size:10px;color:#0a0a0a">Hit</span></div></div>
+<div class="row" style="gap:12px;padding:10px 0;border-bottom:1px solid #e5e5e5"><div class="thumb"></div><div style="flex-grow:1;min-width:0"><div style="font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">“You can replace your editor with this in a week”</div><div class="sub">Jun 3 · 30.5K views</div></div><div class="col" style="gap:0;align-items:flex-end"><span class="tnum" style="font-weight:600">2.0×</span><span class="badge out" style="height:18px;font-size:10px;color:#0a0a0a">Hit</span></div></div>
+<div class="row" style="gap:12px;padding:10px 0;border-bottom:1px solid #e5e5e5"><div class="thumb"></div><div style="flex-grow:1;min-width:0"><div style="font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">“The 3-second rule is real and here is the data”</div><div class="sub">Aug 27 · 29.9K views</div></div><div class="col" style="gap:0;align-items:flex-end"><span class="tnum" style="font-weight:600">1.9×</span><span class="badge out" style="height:18px;font-size:10px;color:#0a0a0a">Hit</span></div></div>
+<div class="row" style="gap:12px;padding:10px 0;border-bottom:1px solid #e5e5e5"><div class="thumb"></div><div style="flex-grow:1;min-width:0"><div style="font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">“Most hooks fail because of one word”</div><div class="sub">Jul 30 · 22.1K views</div></div><div class="col" style="gap:0;align-items:flex-end"><span class="tnum" style="font-weight:600">1.2×</span><span class="badge out" style="height:18px;font-size:10px;color:#a3a3a3">—</span></div></div>
+<div class="row" style="gap:12px;padding:10px 0;border-bottom:1px solid #e5e5e5"><div class="thumb"></div><div style="flex-grow:1;min-width:0"><div style="font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">“AI will not take your job, this will”</div><div class="sub">Aug 17 · 19.4K views</div></div><div class="col" style="gap:0;align-items:flex-end"><span class="tnum" style="font-weight:600">1.1×</span><span class="badge out" style="height:18px;font-size:10px;color:#a3a3a3">—</span></div></div>
+<div class="row" style="gap:12px;padding:10px 0;border-bottom:1px solid #e5e5e5"><div class="thumb"></div><div style="flex-grow:1;min-width:0"><div style="font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">“Your captions are doing nothing”</div><div class="sub">Jun 21 · 14.2K views</div></div><div class="col" style="gap:0;align-items:flex-end"><span class="tnum" style="font-weight:600">0.8×</span><span class="badge out" style="height:18px;font-size:10px;color:#a3a3a3">—</span></div></div>
+<div class="row" style="gap:12px;padding:10px 0;border-bottom:1px solid #e5e5e5"><div class="thumb"></div><div style="flex-grow:1;min-width:0"><div style="font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">“Short videos are not the answer”</div><div class="sub">Jul 7 · 11.8K views</div></div><div class="col" style="gap:0;align-items:flex-end"><span class="tnum" style="font-weight:600">0.6×</span><span class="badge out" style="height:18px;font-size:10px;color:#a3a3a3">—</span></div></div>
+  </div>
+</div>
+
+</x-dc>
+</body>
+</html>
