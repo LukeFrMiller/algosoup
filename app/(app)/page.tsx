@@ -5,6 +5,7 @@ import { ParamSelect } from '@/components/dashboard/param-select'
 import { SuggestionCards } from '@/components/dashboard/suggestion-cards'
 import { asDimension, asMetric, CHIP, compact, DIMENSIONS, METRICS, mult, pct, plain, shortDate } from '@/components/dashboard/format'
 import { Thumb } from '@/components/video/thumb'
+import { captionTitle } from '@/components/video/format'
 import { buttonVariants } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
@@ -166,7 +167,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ d
                   <div className="flex items-center gap-2.5">
                     <Link href={`/videos/${v.video_id}`}><Thumb src={v.thumbnail_url} /></Link>
                     <div className="min-w-0">
-                      <Link href={`/videos/${v.video_id}`} className="block max-w-[520px] truncate font-medium hover:underline">{v.hook_text ? `“${v.hook_text}”` : (v.caption?.split('\n')[0].trim() || 'No speech, no caption')}</Link>
+                      <Link href={`/videos/${v.video_id}`} className="block max-w-[520px] truncate font-medium hover:underline">{v.hook_text ? `“${v.hook_text}”` : (captionTitle(v.caption) || 'No speech, no caption')}</Link>
                       <div className="text-xs text-muted-foreground">
                         {shortDate(v.posted_at)} ·{' '}
                         <a href={v.permalink} target="_blank" rel="noreferrer" className="hover:text-foreground">open on Instagram</a>

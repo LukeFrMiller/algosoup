@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { createClient } from '@/lib/supabase/server'
 import { AddToHypothesis, EditLabels, Embed, RefreshButton } from '@/components/video/client'
-import { Chip, Dot, METRICS, cap, labelEntries, fmtDate, fmtNum, fmtRatio, timeAgo, type Row, type View } from '@/components/video/format'
+import { Chip, Dot, METRICS, cap, captionTitle, labelEntries, fmtDate, fmtNum, fmtRatio, timeAgo, type Row, type View } from '@/components/video/format'
 
 const STEPS = ['metrics', 'transcribe', 'label'] as const
 const hypName = (h: { labels: unknown }, i: number) =>
@@ -34,7 +34,7 @@ export default async function VideoPage({ params }: { params: Promise<{ id: stri
   const all = (hyps.data ?? []) as Pick<Row<'hypotheses'>, 'id' | 'labels' | 'status' | 'created_at'>[]
   const tagged = new Set((tags.data ?? []).map((r: { hypothesis_id: string }) => r.hypothesis_id))
   const named = all.map((h, i) => ({ ...h, name: hypName(h, i) }))
-  const title = label?.hook_text ?? v.caption ?? 'Untitled reel'
+  const title = label?.hook_text ?? (captionTitle(v.caption) || 'Untitled reel')
 
   const stepNote = {
     metrics: m ? timeAgo(m.fetched_at) : 'not run',

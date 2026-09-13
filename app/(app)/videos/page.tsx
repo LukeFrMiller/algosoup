@@ -4,7 +4,7 @@ import { buttonVariants } from '@/components/ui/button'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { createClient } from '@/lib/supabase/server'
 import { cn } from '@/lib/utils'
-import { fmtDate, fmtNum, ratio, type View } from '@/components/video/format'
+import { captionTitle, fmtDate, fmtNum, ratio, type View } from '@/components/video/format'
 import { Thumb } from '@/components/video/thumb'
 import { Input } from '@/components/ui/input'
 
@@ -79,7 +79,7 @@ export default async function VideosPage({ searchParams }: { searchParams: Promi
                 <TableRow key={v.id}>
                   <TableCell><Link href={`/videos/${v.id}`}><Thumb src={v.thumbnail_url} /></Link></TableCell>
                   <TableCell>
-                    <Link href={`/videos/${v.id}`} className="font-medium hover:underline">{v.hook_text ?? v.caption ?? 'Untitled reel'}</Link>
+                    <Link href={`/videos/${v.id}`} className="font-medium hover:underline">{v.hook_text ?? (captionTitle(v.caption) || 'Untitled reel')}</Link>
                   </TableCell>
                   <TableCell className="text-muted-foreground">{fmtDate(v.posted_at)}</TableCell>
                   <TableCell><Badge variant="outline">{status(v)}</Badge></TableCell>

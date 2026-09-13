@@ -7,6 +7,11 @@ export type View<T extends keyof Database['public']['Views']> = Database['public
 export type Metric = 'views' | 'saves' | 'shares' | 'engagement'
 export const METRICS: Metric[] = ['views', 'saves', 'shares', 'engagement']
 
+// First sentence or line of a caption, trimmed to a title-sized string.
+export const captionTitle = (c: string | null | undefined, max = 90) => {
+  const first = (c ?? '').split('\n')[0].split(/(?<=[.!?])\s/)[0].trim()
+  return first.length > max ? first.slice(0, max - 1).trimEnd() + '…' : first
+}
 export const fmtNum = (n: number | null | undefined) => (n == null ? '—' : n.toLocaleString('en-US'))
 export const fmtDate = (d: string | null | undefined) =>
   d ? new Date(d).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : '—'
