@@ -79,7 +79,7 @@ export default async function VideosPage({ searchParams }: { searchParams: Promi
                 <TableRow key={v.id}>
                   <TableCell><Link href={`/videos/${v.id}`}><Thumb src={v.thumbnail_url} /></Link></TableCell>
                   <TableCell>
-                    <Link href={`/videos/${v.id}`} className="font-medium hover:underline">{v.hook_text ?? (captionTitle(v.caption) || 'Untitled reel')}</Link>
+                    <Link href={`/videos/${v.id}`} title={v.hook_text ?? v.caption ?? undefined} className="block max-w-[480px] truncate font-medium hover:underline">{v.hook_text ?? (captionTitle(v.caption) || 'Untitled reel')}</Link>
                   </TableCell>
                   <TableCell className="text-muted-foreground">{fmtDate(v.posted_at)}</TableCell>
                   <TableCell><Badge variant="outline">{status(v)}</Badge></TableCell>
