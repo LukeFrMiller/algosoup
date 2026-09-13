@@ -61,7 +61,7 @@ export default async function ConnectPage({ searchParams }: { searchParams: Prom
             </div>
             <div className="flex items-center gap-2">
               <RefreshToken />
-              <Button variant="ghost" render={<a href="/api/instagram/connect" />}>Reconnect</Button>
+              <Button variant="ghost" nativeButton={false} render={<a href="/api/instagram/connect" />}>Reconnect</Button>
               <span className="grow" />
               <Disconnect action={disconnect} />
             </div>
@@ -78,7 +78,7 @@ export default async function ConnectPage({ searchParams }: { searchParams: Prom
               <div className="flex items-center gap-2.5"><Chip>instagram_business_basic</Chip><span className="text-muted-foreground">profile and media list</span></div>
               <div className="flex items-center gap-2.5"><Chip>instagram_business_manage_insights</Chip><span className="text-muted-foreground">views, saves, shares, likes, comments, reach</span></div>
             </div>
-            <div><Button size="lg" render={<a href="/api/instagram/connect" />}>Continue with Instagram</Button></div>
+            <div><Button size="lg" nativeButton={false} render={<a href="/api/instagram/connect" />}>Continue with Instagram</Button></div>
             <div className="flex items-start gap-2 rounded-md bg-muted px-3 py-2 text-xs text-muted-foreground">
               <InfoIcon className="mt-0.5 size-3.5 shrink-0" />
               <span>Instagram redirects to the production URL. Local development reads the stored token from the hosted database.</span>

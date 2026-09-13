@@ -143,7 +143,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ d
           </div>
           <div className="flex gap-2">
             <ParamSelect name="metric" value={metric} options={METRICS} />
-            <Button variant="outline" render={<Link href="/videos" />}>All videos</Button>
+            <Button variant="outline" nativeButton={false} render={<Link href="/videos" />}>All videos</Button>
           </div>
         </CardHeader>
         <Table>
